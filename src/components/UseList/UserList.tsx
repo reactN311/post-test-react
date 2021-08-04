@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 import './UserList.styles.css'
 import useFetch from './useFetch'; 
-import stylusLi, { listStylus } from './user-styles';
+import stylusLi, { listStylus, stylusUserAvatar } from './user-styles';
+import { Post } from './user-interface';
 
 
 const urlBase:string = `http://jsonplaceholder.typicode.com/`
@@ -11,8 +12,17 @@ const urlBase:string = `http://jsonplaceholder.typicode.com/`
 
 
 
-const User = ( {userName, name} ) => {
-  return (<div>{userName} ({name})</div>)
+const User = ( {userName, name} ):JSX.Element => {
+  return (<div className='user-avatar' style={stylusUserAvatar} >
+            <div>{userName}</div>  
+            <div>({name})</div>  
+          </div>)
+}
+const Posts = ( {title, body} ):JSX.Element => {
+  return (<div className='user-avatar' style={stylusUserAvatar} >
+            <div style={{color:'grey'}}>{title}</div>
+            <div>{body}</div>
+          </div>)
 }
 
 const UserList = () => {
@@ -23,18 +33,33 @@ const UserList = () => {
   // let handlerLi = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => { 
   //   var element = e.target as HTMLElement;   
   // }
+  let handlerInput = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    var element = e.target as HTMLInputElement;   
+    setSearchPost(element.value)
+  }
  
   return posts.data ? (
-    <div className='wrap-list' >
-      <input type='text' defaultValue={searchPost} onChange={(e) => setSearchPost(e.target.value)} /> 
+    <div className='wrap-list'style={stylusUserAvatar} >
+      <input type='text' defaultValue={searchPost} onChange={handlerInput} /> 
       <ul style={listStylus} >
         {posts.data
         .filter(p => p.body.includes(searchPost))
-        .map((el, i) => <li key={i}   style={stylusLi} > <User userName={el.userData && el.userData.un} name={el.userData && el.userData.nm}  /> <div style={{color:'grey'}}>{el.title}</div><div>{el.body}</div></li>)}
+        .map(render)}
       </ul>
     </div>
   )
   :(<div>...loading</div>)
+
+  function render (el: Post,i: number) {
+    return (<li key={i}   style={stylusLi} > 
+              <User userName={el.userData && el.userData.un} name={el.userData && el.userData.nm}  /> 
+              <Posts title={el.title} body={el.body}  />
+            </li>)
+  }
+
+
+
+  
 }
 
 // function areEqual(prevProps: any, nextProps: any) {

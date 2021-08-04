@@ -12,4 +12,10 @@ export const stylusLi: React.CSSProperties = {
   flexDirection: "column",
 };
 
+export const stylusUserAvatar: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
 export default stylusLi;

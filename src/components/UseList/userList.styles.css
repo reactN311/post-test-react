@@ -9,3 +9,9 @@
   background-color: rgba(218, 75, 75, 0.5);
   /* -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5); */
 }
+
+.user-avatar {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+}
