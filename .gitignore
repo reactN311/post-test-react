@@ -2,5 +2,6 @@
 dist/
 node_modules/
 src/**/*.jsx
+src/*.zip
 tests/__coverage__/
 tests/**/*.jsx
