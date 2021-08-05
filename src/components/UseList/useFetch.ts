@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 
 import axios, { AxiosRequestConfig } from "axios";
-import User, { Post } from "./user-interface";
-
-// State & hook output
-interface State {
-  status: "init" | "fetching" | "error" | "fetched";
-  data?: any[];
-  dataUsers?: any[];
-  error?: string;
-}
+import IUser, { IPost, State } from "./user-interface";
 
 const urlPosts: string = "posts??userId=1&_limit=15";
 const urlUsers: string = "users";
@@ -17,17 +9,16 @@ const urlUsers: string = "users";
 const initialState: State = {
   status: "init",
   error: undefined,
-  data: undefined,
-  dataUsers: undefined,
+  dataPost: undefined,
 };
 
-const addUserToDataPost = (posts: any[], users: any[]) => {
-  let newArr = posts.map((p: Post) => {
-    let idx = users.findIndex((u: User) => u.id === p.userId);
-    console.log({ idx });
+const addUserToDataPost = (posts: IPost[], users: IUser[]) => {
+  let newArr = posts.map((p: IPost) => {
+    let idx = users.findIndex((u: IUser) => u.id === p.userId);
 
     if (idx > -1) {
-      p.userData = { un: users[idx].username, nm: users[idx].name };
+      p.userData = users[idx];
+      // p.userData = { un: users[idx].username, nm: users[idx].name };
     } else {
       p.userData = undefined;
     }
@@ -38,38 +29,26 @@ const addUserToDataPost = (posts: any[], users: any[]) => {
 };
 
 function useFetch(urlBase?: string, options?: AxiosRequestConfig): State {
-  const [dataPost, setDataPost] = useState(initialState);
-  console.log({ dataPost });
+  const [dataState, setDataState] = useState(initialState);
 
   useEffect(() => {
-    if (dataPost.status !== "fetched") {
-      return;
-    }
+    if (dataState.status !== "fetched") return;
 
     const fetchUsers = () => {
       let url = urlBase + urlUsers;
       try {
-        fetch(url)
-          .then((data) => data.json())
-          .then((jsonUsers: any[]) => {
-            console.log({ jsonUsers });
-            let postData = addUserToDataPost(dataPost.data, jsonUsers);
-            console.log({ postData });
-
-            setDataPost({ ...dataPost, data: postData });
-          });
+        axios.get<IUser[]>(url).then((jsonUsers) => {
+          let postData = addUserToDataPost(dataState.dataPost, jsonUsers.data);
+          setDataState({ ...dataState, dataPost: postData });
+        });
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchUsers();
-
-    return () => {
-      console.log("exit");
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataPost.status]);
+  }, [dataState.status]);
 
   function fetchData() {
     let url = urlBase + urlPosts;
@@ -77,12 +56,10 @@ function useFetch(urlBase?: string, options?: AxiosRequestConfig): State {
       fetch(url)
         .then((data) => data.json())
         .then((jsonData) => {
-          console.log(jsonData);
-
-          setDataPost({ ...dataPost, status: "fetched", data: jsonData });
+          setDataState({ ...dataState, status: "fetched", dataPost: jsonData });
         });
     } catch (error) {
-      // dispatch({ type: "failure", payload: error.message })
+      setDataState({ ...dataState, error: "failure" });
     }
   }
 
@@ -94,7 +71,7 @@ function useFetch(urlBase?: string, options?: AxiosRequestConfig): State {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlBase]);
 
-  return dataPost;
+  return dataState;
 }
 
 export default useFetch;

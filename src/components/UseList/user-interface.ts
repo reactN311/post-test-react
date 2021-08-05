@@ -1,12 +1,11 @@
-export interface Post {
-  userId: number;
-  id: number;
-  userData: any;
-  title: string;
-  body: string;
+export interface State {
+  status: "init" | "fetching" | "error" | "fetched";
+  dataPost?: any[];
+  dataUsers?: any[];
+  error?: string;
 }
 
-export interface User {
+export interface IUser {
   id: number;
   name: string;
   username: string;
@@ -30,4 +29,24 @@ export interface User {
   };
 }
 
-export default User;
+export interface IPost {
+  userId: number;
+  id: number;
+  userData: IUser | undefined;
+  title: string;
+  body: string;
+}
+
+export type PostType = IPost;
+
+export interface UserProp {
+  userName: string;
+  name: string;
+}
+
+export interface PostsProp {
+  title: string;
+  body: string;
+}
+
+export default IUser;

@@ -11,7 +11,7 @@ class App extends React.Component<Record<string, unknown>, undefined> {
   public render() {
     return (
       <div className="app">
-        <h1>User for Test</h1>  
+        <h1>News</h1>  
         <UseList />
       </div>
     );

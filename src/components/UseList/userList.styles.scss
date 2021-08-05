@@ -1,17 +1,13 @@
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 20px;
-  border: '1px solid red'
+  border: '1px solid #2196f35c'
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 3px;
-  background-color: rgba(218, 75, 75, 0.5);
+  background-color: #deb8879e;
   /* -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5); */
 }
 
-.user-avatar {
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-}
+ 
